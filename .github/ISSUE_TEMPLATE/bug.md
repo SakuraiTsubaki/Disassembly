@@ -1,7 +1,7 @@
 ---
 name: Bug report
 description: Report a reproducible problem in scripts, tooling, tests, CI, or documentation
- title: "[Bug] "
+title: "[Bug] "
 labels: []
 assignees: []
 ---
