@@ -7,7 +7,6 @@
 [![Build](https://github.com/SakuraiTsubaki/Disassembly/actions/workflows/build.yml/badge.svg)](https://github.com/SakuraiTsubaki/Disassembly/actions/workflows/build.yml)
 [![Test](https://github.com/SakuraiTsubaki/Disassembly/actions/workflows/test.yml/badge.svg)](https://github.com/SakuraiTsubaki/Disassembly/actions/workflows/test.yml)
 [![Verify](https://github.com/SakuraiTsubaki/Disassembly/actions/workflows/verify.yml/badge.svg)](https://github.com/SakuraiTsubaki/Disassembly/actions/workflows/verify.yml)
-[![Pages](https://github.com/SakuraiTsubaki/Disassembly/actions/workflows/pages.yml/badge.svg)](https://github.com/SakuraiTsubaki/Disassembly/actions/workflows/pages.yml)
 
 *A reusable, reproducible workspace for disassembly and reverse-engineering research.*
 
@@ -34,7 +33,7 @@ The repository keeps target-specific reconstruction separate from shared tooling
 | [`tests/`](tests/) | Unit, integration, and regression verification | 🟡 Ready |
 | [`reports/`](reports/) | Analysis, comparison, and verification reports | 🟡 Ready |
 | [`manifests/`](manifests/) | Source provenance, tool versions, checksums | 🟡 Ready |
-| [`.github/`](.github/) | CI, issue templates, pull-request workflow, Pages | 🟢 Active |
+| [`.github/`](.github/) | CI, issue templates, pull-request workflow, publication template | 🟢 Active |
 
 **Legend:** 🟢 active · 🟡 framework ready · 🔵 verified target · ⚪ planned
 
@@ -100,12 +99,13 @@ Tool versions and target-specific requirements must be recorded rather than assu
 - [`docs/methodology/reverse-engineering.md`](docs/methodology/reverse-engineering.md) — research principles
 - [`docs/methodology/naming-conventions.md`](docs/methodology/naming-conventions.md) — naming rules
 - [`docs/methodology/verification.md`](docs/methodology/verification.md) — verification requirements
+- [`docs/WORKFLOW.md`](docs/WORKFLOW.md) — detailed stage gates and process diagram
 - [`docs/STYLE_GUIDE.md`](docs/STYLE_GUIDE.md) — repository-wide documentation style
 - [`docs/references/README.md`](docs/references/README.md) — source/provenance rules
 
-## Reports & Pages
+## Reports & publication portal
 
-Research output belongs in [`reports/`](reports/). The Pages workflow publishes the repository's report portal from [`site/`](site/) so reports can be browsed without digging through the tree.
+Research output belongs in [`reports/`](reports/). A dark terminal-style static research portal is maintained in [`site/`](site/). The ready-to-activate GitHub Pages workflow is stored at [`.github/pages-workflow.example.yml`](.github/pages-workflow.example.yml); once repository Pages is enabled with **GitHub Actions** as its source, that template can be moved to `.github/workflows/pages.yml` for deployment.
 
 ## Binary policy
 
