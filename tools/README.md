@@ -1,7 +1,7 @@
 # Tools
 
-Reusable, target-neutral disassembly utilities belong here.
+- `hash_input.py` records size, SHA-1, and SHA-256 without copying an input.
+- `validate_repository.py` checks the common repository contract.
 
-A tool should document its supported input format, deterministic invocation,
-output contract, dependencies, and verification method. Target-specific tools
-belong in the matching `PocketMonsters-*-Disassembly` repository.
+Tools use the Python standard library so the foundation remains dependency-free.
+Target-specific tools stay in the relevant target repository until reusable.

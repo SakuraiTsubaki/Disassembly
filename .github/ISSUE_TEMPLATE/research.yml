@@ -1,0 +1,25 @@
+name: Research question
+description: Propose a bounded, reproducible research task
+title: "[Research] "
+labels: ["research"]
+body:
+  - type: textarea
+    id: question
+    attributes:
+      label: Question
+      description: State one falsifiable question.
+    validations:
+      required: true
+  - type: textarea
+    id: targets
+    attributes:
+      label: Targets and verified inputs
+      description: List repositories and hashes; never upload ROMs.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Existing evidence and reproduction plan
+    validations:
+      required: true

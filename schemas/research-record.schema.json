@@ -1,0 +1,111 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SakuraiTsubaki/Disassembly/schemas/research-record.schema.json",
+  "title": "Disassembly research record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "question",
+    "targets",
+    "inputs",
+    "procedure",
+    "claims",
+    "status"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "question": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "sha256"
+        ],
+        "properties": {
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "procedure": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "kind",
+          "statement",
+          "confidence"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "observed",
+              "derived",
+              "inferred",
+              "unknown"
+            ]
+          },
+          "statement": {
+            "type": "string"
+          },
+          "confidence": {
+            "enum": [
+              "high",
+              "medium",
+              "low",
+              "not-applicable"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "draft",
+        "reproduced",
+        "superseded"
+      ]
+    }
+  }
+}

@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Target-specific work
+    url: https://github.com/SakuraiTsubaki/Disassembly/blob/main/projects/catalog.json
+    about: Choose the matching target repository from the catalog.

@@ -1,0 +1,23 @@
+name: Tool proposal
+description: Propose a reusable disassembly utility
+title: "[Tool] "
+labels: ["tooling"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and supported targets
+    validations:
+      required: true
+  - type: textarea
+    id: contract
+    attributes:
+      label: Input, output, and determinism contract
+    validations:
+      required: true
+  - type: textarea
+    id: verification
+    attributes:
+      label: Verification plan
+    validations:
+      required: true

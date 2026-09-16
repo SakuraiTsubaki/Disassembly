@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "projects": [
+    {
+      "id": "aka",
+      "repository": "SakuraiTsubaki/PocketMonsters-Aka-Disassembly",
+      "title": "Pocket Monsters Aka / Pokémon Red",
+      "platform": "Game Boy",
+      "cpu": "Sharp SM83",
+      "architecture": "gb-sm83",
+      "family": "generation-i",
+      "status": "foundation"
+    },
+    {
+      "id": "ao",
+      "repository": "SakuraiTsubaki/PocketMonsters-Ao-Disassembly",
+      "title": "Pocket Monsters Ao / Pokémon Blue",
+      "platform": "Game Boy",
+      "cpu": "Sharp SM83",
+      "architecture": "gb-sm83",
+      "family": "generation-i",
+      "status": "foundation"
+    },
+    {
+      "id": "midori",
+      "repository": "SakuraiTsubaki/PocketMonsters-Midori-Disassembly",
+      "title": "Pocket Monsters Midori / Pokémon Green",
+      "platform": "Game Boy",
+      "cpu": "Sharp SM83",
+      "architecture": "gb-sm83",
+      "family": "generation-i",
+      "status": "foundation"
+    },
+    {
+      "id": "pikachu",
+      "repository": "SakuraiTsubaki/PocketMonsters-Pikachu-Disassembly",
+      "title": "Pocket Monsters Pikachu / Pokémon Yellow",
+      "platform": "Game Boy",
+      "cpu": "Sharp SM83",
+      "architecture": "gb-sm83",
+      "family": "generation-i",
+      "status": "foundation"
+    },
+    {
+      "id": "kin",
+      "repository": "SakuraiTsubaki/PocketMonsters-Kin-Disassembly",
+      "title": "Pocket Monsters Kin / Pokémon Gold",
+      "platform": "Game Boy / Game Boy Color compatible",
+      "cpu": "Sharp SM83",
+      "architecture": "gb-sm83",
+      "family": "generation-ii",
+      "status": "foundation"
+    },
+    {
+      "id": "gin",
+      "repository": "SakuraiTsubaki/PocketMonsters-Gin-Disassembly",
+      "title": "Pocket Monsters Gin / Pokémon Silver",
+      "platform": "Game Boy / Game Boy Color compatible",
+      "cpu": "Sharp SM83",
+      "architecture": "gb-sm83",
+      "family": "generation-ii",
+      "status": "foundation"
+    },
+    {
+      "id": "crystal",
+      "repository": "SakuraiTsubaki/PocketMonsters-Crystal-Disassembly",
+      "title": "Pokémon Crystal",
+      "platform": "Game Boy Color",
+      "cpu": "Sharp SM83",
+      "architecture": "gb-sm83",
+      "family": "generation-ii",
+      "status": "foundation"
+    },
+    {
+      "id": "ruby",
+      "repository": "SakuraiTsubaki/PocketMonsters-Ruby-Disassembly",
+      "title": "Pokémon Ruby",
+      "platform": "Game Boy Advance",
+      "cpu": "ARM7TDMI (ARMv4T)",
+      "architecture": "gba-arm7tdmi",
+      "family": "generation-iii",
+      "status": "foundation"
+    },
+    {
+      "id": "sapphire",
+      "repository": "SakuraiTsubaki/PocketMonsters-Sapphire-Disassembly",
+      "title": "Pokémon Sapphire",
+      "platform": "Game Boy Advance",
+      "cpu": "ARM7TDMI (ARMv4T)",
+      "architecture": "gba-arm7tdmi",
+      "family": "generation-iii",
+      "status": "foundation"
+    },
+    {
+      "id": "emerald",
+      "repository": "SakuraiTsubaki/PocketMonsters-Emerald-Disassembly",
+      "title": "Pokémon Emerald",
+      "platform": "Game Boy Advance",
+      "cpu": "ARM7TDMI (ARMv4T)",
+      "architecture": "gba-arm7tdmi",
+      "family": "generation-iii",
+      "status": "foundation"
+    },
+    {
+      "id": "firered",
+      "repository": "SakuraiTsubaki/PocketMonsters-FireRed-Disassembly",
+      "title": "Pokémon FireRed",
+      "platform": "Game Boy Advance",
+      "cpu": "ARM7TDMI (ARMv4T)",
+      "architecture": "gba-arm7tdmi",
+      "family": "generation-iii",
+      "status": "foundation"
+    },
+    {
+      "id": "leafgreen",
+      "repository": "SakuraiTsubaki/PocketMonsters-LeafGreen-Disassembly",
+      "title": "Pokémon LeafGreen",
+      "platform": "Game Boy Advance",
+      "cpu": "ARM7TDMI (ARMv4T)",
+      "architecture": "gba-arm7tdmi",
+      "family": "generation-iii",
+      "status": "foundation"
+    }
+  ]
+}

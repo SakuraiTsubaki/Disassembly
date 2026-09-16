@@ -1,0 +1,112 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/SakuraiTsubaki/Disassembly/schemas/project.schema.json",
+  "title": "Disassembly target project",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "repository",
+    "title",
+    "platform",
+    "cpu",
+    "architecture",
+    "family",
+    "status",
+    "releases"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^SakuraiTsubaki/PocketMonsters-[A-Za-z]+-Disassembly$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "platform": {
+      "type": "string",
+      "minLength": 1
+    },
+    "cpu": {
+      "type": "string",
+      "minLength": 1
+    },
+    "architecture": {
+      "enum": [
+        "gb-sm83",
+        "gba-arm7tdmi"
+      ]
+    },
+    "family": {
+      "enum": [
+        "generation-i",
+        "generation-ii",
+        "generation-iii"
+      ]
+    },
+    "status": {
+      "enum": [
+        "foundation",
+        "baseline",
+        "analysis",
+        "reconstruction"
+      ]
+    },
+    "releases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "region",
+          "language",
+          "revision",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "region": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          },
+          "revision": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "candidate",
+              "verified",
+              "unsupported"
+            ]
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "sha1": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{40}$"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    }
+  }
+}

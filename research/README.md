@@ -1,7 +1,5 @@
 # Research
 
-Target-neutral methods, references, and research notes belong here.
-
-Each study should state its question, inputs, input hashes, procedure, evidence,
-limitations, and the target repositories to which it applies. Do not store
-copyrighted binary inputs.
+Cross-target research belongs here. Start from
+[`templates/study.md`](templates/study.md) and follow the shared research
+method. Title-specific observations remain in the relevant target repository.
