@@ -1,0 +1,33 @@
+# Local inputs and generated outputs
+/roms/
+/input/
+/build/
+/dist/
+/out/
+/tmp/
+/vendor/
+
+# Cartridge images and emulator state
+*.gb
+*.gbc
+*.gba
+*.rom
+*.bin
+*.sav
+*.srm
+*.state
+
+# Tool caches and local environments
+.env
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
