@@ -1,0 +1,33 @@
+# Local/private inputs
+local/
+inputs/
+private/
+
+# Proprietary ROM/image formats
+*.rom
+*.gb
+*.gbc
+*.gba
+*.nds
+*.3ds
+*.cia
+*.xci
+*.nsp
+
+# Generated build output
+build/
+dist/
+out/
+.tmp/
+.cache/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
