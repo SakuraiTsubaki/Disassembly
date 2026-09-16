@@ -8,12 +8,13 @@ This project follows a lightweight **Keep a Changelog** style: changes are group
 
 ### Added
 - Polished repository landing page with workflow/status navigation.
-- Build, test, verify, and Pages status badges.
+- Build, test, and verify status badges.
 - Target status conventions and registration documentation.
 - Repository-wide documentation style guide.
 - Reference and provenance documentation.
 - Expanded issue templates and pull-request template.
-- GitHub Pages report portal scaffolding.
+- Dark terminal-style static research portal in `site/`.
+- GitHub Pages deployment template ready for activation after repository Pages is enabled.
 
 ### Changed
 - Expanded contribution rules around evidence, reproducibility, and verification.
