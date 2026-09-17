@@ -1,25 +1,25 @@
+# ROM images are the only project artifacts excluded from GitHub.
+/rom/
 /roms/
-/input/
-/build/
-/dist/
-/out/
-/tmp/
-/vendor/
+**/rom/
+**/roms/
 *.gb
 *.gbc
 *.gba
 *.rom
-*.bin
-*.sav
-*.srm
-*.state
+
+# Credentials and machine-local environments are not work artifacts.
 .env
+.env.*
+!.env.example
 .venv/
 __pycache__/
 *.py[cod]
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+
+# Editor and operating-system metadata.
 .vscode/
 .idea/
 .DS_Store

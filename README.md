@@ -10,10 +10,24 @@ Game-specific evidence and utilities stay in the matching target repository.
 
 - a catalog of all twelve target repositories;
 - schemas for project metadata, research records, and analysis manifests;
-- a local input hashing tool that never copies ROM contents;
+- local input hashing and artifact-policy validation tools;
 - a repository validator with unit tests;
 - GitHub Actions validation and contribution templates;
-- documented research, evidence, and repository boundaries.
+- documented research, evidence, repository, and artifact boundaries.
+
+## Artifact policy
+
+ROM binaries are the only project artifacts excluded from GitHub. Original,
+modified, patched, and rebuilt ROM images must never be committed.
+
+All lawful, storable non-ROM work products are preserved: analysis, collected
+research, reports, documentation, README files, scripts, source code, tools,
+configuration, logs, manifests, checklists, comparisons, CSV/JSON/YAML,
+graphics, sprites, images, palettes, fonts, icons, tiles, converted data,
+patches, and verification evidence.
+
+Graphics and sprite work must include actual reviewable PNG output alongside
+encoded data and metadata. See [the artifact policy](docs/ARTIFACT_POLICY.md).
 
 ## Start here
 
@@ -21,8 +35,9 @@ Game-specific evidence and utilities stay in the matching target repository.
 2. Follow [the research method](docs/RESEARCH_METHOD.md).
 3. Hash a local input with `python tools/hash_input.py path/to/input`.
 4. Create a study from [the template](research/templates/study.md).
-5. Validate the repository with `python tools/validate_repository.py .`.
-6. Run tests with `python -m unittest discover -s tests -v`.
+5. Validate with `python tools/validate_repository.py .`.
+6. Check artifacts with `python tools/verify_artifacts.py .`.
+7. Run tests with `python -m unittest discover -s tests -v`.
 
 ## Layout
 
@@ -31,12 +46,6 @@ Game-specific evidence and utilities stay in the matching target repository.
 - `research/` — shared methods and cross-target studies;
 - `tools/` — deterministic, reusable utilities;
 - `analysis/` — reproducible cross-target results;
-- `docs/` — governance, method, and roadmap.
-
-## Boundaries
-
-ROM images, firmware, keys, saves, emulator states, proprietary SDKs, and
-generated proprietary binaries are not committed. Store only lawful source,
-metadata, hashes, procedures, and independently created analysis.
+- `docs/` — governance, method, artifact policy, and roadmap.
 
 This foundation intentionally does not migrate earlier experimental work.

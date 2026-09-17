@@ -1,10 +1,23 @@
 # Contributing
 
-## Before opening a change
+## Preservation rule
+
+Commit every lawful, useful non-ROM work product, including scripts, source,
+logs, structured data, patches, graphics, transformed data, reports, and
+validation evidence. Do not replace a useful artifact with only a checksum or
+description.
+
+ROM images are prohibited whether original, modified, patched, rebuilt, renamed,
+or archived. Graphics and sprite work must include a visible PNG result with the
+encoded data and metadata.
+
+Credentials, authentication material, editor metadata, caches, and virtual
+environments are machine-local and are not work products.
+
+## Research quality
 
 - Keep cross-target work here and target-specific work in its target repository.
-- Do not commit ROMs or other proprietary binary inputs.
-- Record hashes rather than redistributing inputs.
+- Record hashes rather than redistributing ROM inputs.
 - Separate observed facts from hypotheses and label confidence.
 - Make tools deterministic and document their input and output contracts.
 
@@ -12,10 +25,9 @@
 
 ```sh
 python tools/validate_repository.py .
+python tools/verify_artifacts.py .
 python -m unittest discover -s tests -v
 python -m compileall -q tools tests
 ```
 
-A pull request must explain its evidence, reproduction commands, affected
-targets, and known limitations. Choosing a repository license remains an owner
-decision and is deliberately outside this foundation change.
+Choosing a repository license remains an owner decision.

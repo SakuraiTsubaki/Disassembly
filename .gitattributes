@@ -1,8 +1,29 @@
 * text=auto eol=lf
+
+# Viewable media
 *.png binary
 *.gif binary
 *.jpg binary
 *.jpeg binary
+*.bmp binary
+*.webp binary
+*.ico binary
+
+# Binary research outputs and patches
+*.bin binary
+*.2bpp binary
+*.4bpp binary
+*.chr binary
+*.tile binary
+*.tiles binary
+*.lz binary
+*.ips binary
+*.bps binary
+*.ups binary
+*.xdelta binary
+
+# ROM images remain binary but are rejected by policy and validation.
 *.gb binary
 *.gbc binary
 *.gba binary
+*.rom binary
