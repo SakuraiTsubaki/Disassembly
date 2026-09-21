@@ -24,7 +24,10 @@ def _hashes(data: bytes) -> dict[str, str]:
 
 
 def _title(data: bytes) -> str:
-    raw = data[0x134:0x144].split(b"\0", 1)[0]
+    # In CGB-compatible cartridges 0x143 is the CGB flag, reducing the title
+    # field from 16 bytes to 15. Do not decode that flag as title text.
+    title_end = 0x143 if data[0x143] in (0x80, 0xC0) else 0x144
+    raw = data[0x134:title_end].split(b"\0", 1)[0]
     return raw.decode("ascii", errors="replace").rstrip()
 
 
@@ -98,7 +101,9 @@ def main() -> int:
         checks["expected_sha256"] = expected
         checks["sha256_matches"] = result["sha256"] == expected
 
-    print(json.dumps(result, ensure_ascii=False, indent=None if args.compact else 2))
+    # ASCII escaping keeps JSON portable on Windows consoles with legacy code
+    # pages while preserving the exact Unicode string after JSON decoding.
+    print(json.dumps(result, ensure_ascii=True, indent=None if args.compact else 2))
 
     required = [
         checks["nintendo_logo_valid"],
