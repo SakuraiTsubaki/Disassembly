@@ -54,6 +54,19 @@ class InspectGameBoyRomTests(unittest.TestCase):
         self.assertTrue(result["validation"]["header_checksum_valid"])
         self.assertFalse(result["validation"]["global_checksum_valid"])
 
+    def test_cgb_flag_is_not_part_of_title(self):
+        data = bytearray(fixture())
+        data[0x143] = 0x80
+        checksum = 0
+        for value in data[0x134:0x14D]:
+            checksum = (checksum - value - 1) & 0xFF
+        data[0x14D] = checksum
+        global_checksum = (sum(data[:0x14E]) + sum(data[0x150:])) & 0xFFFF
+        data[0x14E:0x150] = global_checksum.to_bytes(2, "big")
+        result = inspector.inspect_bytes(bytes(data))
+        self.assertEqual(result["header"]["title"], "POKEMON RED")
+        self.assertEqual(result["header"]["cgb_flag"], 0x80)
+
     def test_short_input_is_rejected(self):
         with self.assertRaisesRegex(ValueError, "too small"):
             inspector.inspect_bytes(bytes(0x14F))
