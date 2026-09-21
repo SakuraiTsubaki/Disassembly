@@ -10,7 +10,7 @@ Game-specific evidence and utilities stay in the matching target repository.
 
 - a catalog of all twelve target repositories;
 - schemas for project metadata, research records, and analysis manifests;
-- local input hashing and artifact-policy validation tools;
+- local input hashing, Game Boy/Game Boy Advance ROM inspectors, and artifact-policy validation tools;
 - a repository validator with unit tests;
 - GitHub Actions validation and contribution templates;
 - documented research, evidence, repository, and artifact boundaries.
