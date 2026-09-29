@@ -27,6 +27,15 @@ class DisassembleGbBasicBlockTests(unittest.TestCase):
             ["ld [hl], $00", "jr nz $0000"],
         )
 
+    def test_absolute_store_before_branch(self):
+        result = module.disassemble(bytes.fromhex("ea00c01800"), 0)
+        self.assertEqual(result["instructions"][0]["source"], "ld [$c000], a")
+        self.assertEqual(result["terminator"], "jr $0005")
+
+    def test_high_memory_load_before_branch(self):
+        result = module.disassemble(bytes.fromhex("f0401800"), 0)
+        self.assertEqual(result["instructions"][0]["source"], "ldh a, [$ff00 + $40]")
+
     def test_rgbds_render_preserves_instruction_order(self):
         result = module.disassemble(bytes(0x100) + bytes.fromhex("fe112803"), 0x100)
         source = module.render_rgbds(result)

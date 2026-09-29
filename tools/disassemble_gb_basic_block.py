@@ -23,8 +23,15 @@ IMM8 = {
     0x3E: "ld a, ${value:02x}",
     0xFE: "cp ${value:02x}",
     0xE0: "ldh [$ff00 + ${value:02x}], a",
+    0xF0: "ldh a, [$ff00 + ${value:02x}]",
 }
-IMM16 = {0x01: "ld bc, ${value:04x}", 0x21: "ld hl, ${value:04x}", 0x31: "ld sp, ${value:04x}", 0xCD: "call ${value:04x}"}
+IMM16 = {
+    0x01: "ld bc, ${value:04x}",
+    0x21: "ld hl, ${value:04x}",
+    0x31: "ld sp, ${value:04x}",
+    0xCD: "call ${value:04x}",
+    0xEA: "ld [${value:04x}], a",
+}
 RELATIVE = {0x18: ("jr", True), 0x20: ("jr nz", True), 0x28: ("jr z", True)}
 
 
