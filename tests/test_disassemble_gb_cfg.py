@@ -43,6 +43,14 @@ class DisassembleGbCfgTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "mismatch"):
             module.analyze(bytes.fromhex("c9"), 0, "0" * 64, 0)
 
+    def test_publishable_report_omits_rom_byte_extracts(self):
+        result = module.build_cfg(bytes.fromhex("c9"), 0, 0)
+        public = module.omit_raw_bytes(result)
+        self.assertNotIn("block_bytes", public["blocks"][0])
+        self.assertNotIn("bytes", public["blocks"][0]["instructions"][0])
+        self.assertNotIn("opcode", public["blocks"][0]["instructions"][0])
+        self.assertEqual(public["blocks"][0]["block_bytes_sha256"], result["blocks"][0]["block_bytes_sha256"])
+
 
 if __name__ == "__main__":
     unittest.main()
