@@ -24,6 +24,13 @@ class DisassembleGbEntryTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "mismatch"):
             module.analyze(bytes(0x200), "0" * 64)
 
+    def test_publishable_report_and_source(self):
+        result = module.decode(bytes.fromhex("00c35001"))
+        public = module.omit_raw_bytes(result)
+        self.assertNotIn("entry_bytes", public)
+        self.assertTrue(all("bytes" not in item for item in public["instructions"]))
+        self.assertIn("jp $0150", module.render_rgbds(result, "Korean Cartridge Entry"))
+
 
 if __name__ == "__main__":
     unittest.main()
