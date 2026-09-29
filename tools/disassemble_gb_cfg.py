@@ -30,12 +30,15 @@ def build_cfg(data: bytes, start: int, max_depth: int = 1) -> dict:
         address, depth = queue.pop(0)
         if address in blocks:
             continue
+        if any(block["start_address"] < address < block["end_address"] for block in blocks.values()):
+            continue
         block = disassemble(data, address)
         block["depth"] = depth
         blocks[address] = block
         for kind, target in successors(block):
             edges.append({"source": address, "target": target, "kind": kind})
-            if depth < max_depth and target not in blocks:
+            internal = block["start_address"] <= target < block["end_address"]
+            if depth < max_depth and target not in blocks and not internal:
                 queue.append((target, depth + 1))
     return {
         "schema_version": 1,

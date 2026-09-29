@@ -24,6 +24,12 @@ class DisassembleGbCfgTests(unittest.TestCase):
         self.assertEqual(len(result["blocks"]), 1)
         self.assertEqual(result["edges"][0]["target"], 2)
 
+    def test_internal_loop_target_is_not_duplicated_as_block(self):
+        data = bytes.fromhex("3600230b78b120f8c9")
+        result = module.build_cfg(data, 0, 1)
+        self.assertEqual([b["start_address"] for b in result["blocks"]], [0, 8])
+        self.assertIn({"source": 0, "target": 0, "kind": "branch"}, result["edges"])
+
     def test_rgbds_render_labels_each_decoded_block(self):
         data = bytes.fromhex("fe112803af18003e01c9")
         source = module.render_rgbds(module.build_cfg(data, 0, 1))

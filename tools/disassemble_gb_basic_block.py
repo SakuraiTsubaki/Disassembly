@@ -14,11 +14,14 @@ SIMPLE = {
     0xAF: ("xor a", 1, False),
     0xB1: ("or c", 1, False),
     0xF3: ("di", 1, False),
+    0xFB: ("ei", 1, False),
     0x23: ("inc hl", 1, False),
+    0x3D: ("dec a", 1, False),
     0x0B: ("dec bc", 1, False),
     0xC9: ("ret", 1, True),
 }
 IMM8 = {
+    0x26: "ld h, ${value:02x}",
     0x36: "ld [hl], ${value:02x}",
     0x3E: "ld a, ${value:02x}",
     0xFE: "cp ${value:02x}",
