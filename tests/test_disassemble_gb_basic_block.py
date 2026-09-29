@@ -33,6 +33,12 @@ class DisassembleGbBasicBlockTests(unittest.TestCase):
         self.assertIn('SECTION "Entry Target Block", ROM0[$0100]', source)
         self.assertLess(source.index("cp $11"), source.index("jr z $0107"))
 
+    def test_rgbds_render_accepts_distinct_section_and_label(self):
+        result = module.disassemble(bytes.fromhex("c3da09"), 0)
+        source = module.render_rgbds(result, "Bootstrap Block", "BootstrapBlock")
+        self.assertIn('SECTION "Bootstrap Block", ROM0[$0000]', source)
+        self.assertIn("BootstrapBlock::", source)
+
     def test_unsupported_opcode_and_missing_terminator_fail(self):
         with self.assertRaisesRegex(ValueError, "unsupported"):
             module.disassemble(bytes.fromhex("ff"), 0)
