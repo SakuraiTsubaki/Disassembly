@@ -105,6 +105,15 @@ def analyze(data: bytes, start_offset: int, expected_sha256: str | None = None, 
     return result
 
 
+def omit_raw_bytes(result: dict) -> dict:
+    """Return a publication-safe CFG without verbatim instruction halfwords."""
+    cleaned = json.loads(json.dumps(result))
+    for instruction in cleaned["instructions"]:
+        instruction.pop("halfword", None)
+        instruction.pop("bytes_le", None)
+    return cleaned
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("rom", type=Path)
@@ -112,12 +121,14 @@ def main() -> int:
     parser.add_argument("--expected-sha256")
     parser.add_argument("--max-span", type=lambda value: int(value, 0), default=0x4000)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--omit-raw-bytes", action="store_true")
     args = parser.parse_args()
     try:
         result = analyze(args.rom.read_bytes(), args.start_offset, args.expected_sha256, args.max_span)
     except (OSError, ValueError) as exc:
         parser.error(str(exc))
-    text = json.dumps(result, indent=2) + "\n"
+    report = omit_raw_bytes(result) if args.omit_raw_bytes else result
+    text = json.dumps(report, indent=2) + "\n"
     if args.output:
         args.output.write_text(text, encoding="utf-8", newline="\n")
     else:

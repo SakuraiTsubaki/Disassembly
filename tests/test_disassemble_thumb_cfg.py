@@ -12,6 +12,13 @@ spec.loader.exec_module(module)
 
 
 class DisassembleThumbCfgTests(unittest.TestCase):
+    def test_publication_report_omits_raw_halfwords(self):
+        result = module.trace(bytes.fromhex("7047"), 0, 2)
+        public = module.omit_raw_bytes(result)
+        self.assertEqual(public["canonical_instruction_bytes_sha256"], result["canonical_instruction_bytes_sha256"])
+        self.assertNotIn("halfword", public["instructions"][0])
+        self.assertNotIn("bytes_le", public["instructions"][0])
+
     def pack(self, *values: int) -> bytes:
         return struct.pack("<" + "H" * len(values), *values)
 
