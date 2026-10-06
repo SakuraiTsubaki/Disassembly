@@ -11,6 +11,17 @@ spec.loader.exec_module(module)
 
 
 class DisassembleGbBasicBlockTests(unittest.TestCase):
+    def test_cb_prefixed_bit_operations_before_branch(self):
+        result = module.disassemble(bytes.fromhex("cb402001c9"), 0)
+        self.assertEqual(result["instructions"][0]["source"], "bit 0, b")
+        self.assertEqual(result["terminator"], "jr nz $0005")
+
+    def test_cb_decoder_covers_rotate_bit_res_and_set_groups(self):
+        self.assertEqual(module.decode_cb(0x07), "rlc a")
+        self.assertEqual(module.decode_cb(0x7E), "bit 7, [hl]")
+        self.assertEqual(module.decode_cb(0x86), "res 0, [hl]")
+        self.assertEqual(module.decode_cb(0xFF), "set 7, a")
+
     def test_direct_jump_block(self):
         result = module.disassemble(bytes.fromhex("c3da09"), 0)
         self.assertEqual((result["byte_length"], result["instruction_count"], result["terminator"]), (3, 1, "jp $09da"))

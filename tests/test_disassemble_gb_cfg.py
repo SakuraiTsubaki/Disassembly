@@ -30,6 +30,18 @@ class DisassembleGbCfgTests(unittest.TestCase):
         self.assertEqual([b["start_address"] for b in result["blocks"]], [0, 8])
         self.assertIn({"source": 0, "target": 0, "kind": "branch"}, result["edges"])
 
+    def test_branch_target_splits_an_existing_fallthrough_block(self):
+        # Both paths enter address 9, while the fallthrough path executes an
+        # extra xor at address 8.  The CFG must not publish overlapping blocks.
+        data = bytes.fromhex("fe112803af18023e01af20fdc9")
+        result = module.build_cfg(data, 0, 3)
+        blocks = {block["start_address"]: block for block in result["blocks"]}
+        self.assertEqual(blocks[7]["end_address"], 9)
+        self.assertEqual(blocks[7]["terminator"], "fallthrough $0009")
+        self.assertIn({"source": 7, "target": 9, "kind": "fallthrough"}, result["edges"])
+        ranges = [(block["start_address"], block["end_address"]) for block in result["blocks"]]
+        self.assertFalse(any(a < c < b for a, b in ranges for c, _ in ranges))
+
     def test_rgbds_render_labels_each_decoded_block(self):
         data = bytes.fromhex("fe112803af18003e01c9")
         source = module.render_rgbds(module.build_cfg(data, 0, 1))

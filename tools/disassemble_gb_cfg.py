@@ -24,22 +24,54 @@ def build_cfg(data: bytes, start: int, max_depth: int = 1) -> dict:
     if max_depth < 0:
         raise ValueError("max depth must be non-negative")
     queue = [(start, 0)]
-    blocks: dict[int, dict] = {}
-    edges = []
+    entry_depth = {start: 0}
+    discovered: dict[int, dict] = {}
     while queue:
         address, depth = queue.pop(0)
-        if address in blocks:
-            continue
-        if any(block["start_address"] < address < block["end_address"] for block in blocks.values()):
+        if address in discovered:
             continue
         block = disassemble(data, address)
-        block["depth"] = depth
-        blocks[address] = block
+        discovered[address] = block
         for kind, target in successors(block):
-            edges.append({"source": address, "target": target, "kind": kind})
             internal = block["start_address"] <= target < block["end_address"]
-            if depth < max_depth and target not in blocks and not internal:
+            if depth < max_depth and target not in entry_depth and not internal:
+                entry_depth[target] = depth + 1
                 queue.append((target, depth + 1))
+
+    blocks: dict[int, dict] = {}
+    edges = []
+    entries = sorted(entry_depth)
+    for address in entries:
+        block = discovered[address]
+        boundary = next(
+            (entry for entry in entries if block["start_address"] < entry < block["end_address"]),
+            None,
+        )
+        if boundary is not None:
+            instructions = [item for item in block["instructions"] if item["address"] < boundary]
+            if not instructions or instructions[-1]["address"] + instructions[-1]["size"] != boundary:
+                raise ValueError(f"CFG entry 0x{boundary:04x} is not instruction-aligned")
+            raw = data[address:boundary]
+            block = {
+                "schema_version": 1,
+                "start_address": address,
+                "end_address": boundary,
+                "byte_length": len(raw),
+                "instruction_count": len(instructions),
+                "block_bytes": raw.hex(),
+                "block_bytes_sha256": hashlib.sha256(raw).hexdigest(),
+                "instructions": instructions,
+                "terminator": f"fallthrough ${boundary:04x}",
+            }
+            block_successors = [("fallthrough", boundary)]
+        else:
+            block_successors = successors(block)
+        block["depth"] = entry_depth[address]
+        blocks[address] = block
+        edges.extend(
+            {"source": address, "target": target, "kind": kind}
+            for kind, target in block_successors
+        )
     return {
         "schema_version": 1,
         "start_address": start,

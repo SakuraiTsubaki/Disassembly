@@ -36,6 +36,17 @@ IMM16 = {
     0xEA: "ld [${value:04x}], a",
 }
 RELATIVE = {0x18: ("jr", True), 0x20: ("jr nz", True), 0x28: ("jr z", True)}
+CB_REGISTERS = ("b", "c", "d", "e", "h", "l", "[hl]", "a")
+CB_ROTATES = ("rlc", "rrc", "rl", "rr", "sla", "sra", "swap", "srl")
+
+
+def decode_cb(opcode: int) -> str:
+    register = CB_REGISTERS[opcode & 0x07]
+    if opcode < 0x40:
+        return f"{CB_ROTATES[(opcode >> 3) & 0x07]} {register}"
+    operation = ("bit", "res", "set")[(opcode - 0x40) >> 6]
+    bit = (opcode >> 3) & 0x07
+    return f"{operation} {bit}, {register}"
 
 
 def signed8(value: int) -> int:
@@ -71,6 +82,11 @@ def disassemble(data: bytes, start_offset: int, max_bytes: int = 0x100) -> dict:
             size, terminator = 2, RELATIVE[opcode][1]
             target = (offset + size + signed8(data[offset + 1])) & 0xFFFF
             source = f"{RELATIVE[opcode][0]} ${target:04x}"
+        elif opcode == 0xCB:
+            if offset + 2 > len(data):
+                raise ValueError("truncated CB-prefixed instruction")
+            size, terminator, target = 2, False, None
+            source = decode_cb(data[offset + 1])
         else:
             raise ValueError(f"unsupported opcode 0x{opcode:02x} at 0x{offset:04x}")
         raw = data[offset:offset + size]
