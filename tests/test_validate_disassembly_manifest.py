@@ -71,6 +71,18 @@ class ManifestValidatorTests(unittest.TestCase):
         self.assertFalse(result["valid"])
         self.assertIn("output hash mismatch", " ".join(result["errors"]))
 
+    def test_rejects_raw_rom_fields_in_json_output(self):
+        report = self.root / "src" / "report.json"
+        report.write_text(json.dumps({"instructions": [{"bytes": "c3"}]}), encoding="utf-8")
+        self.manifest["outputs"][0] = {
+            "path": "src/report.json",
+            "sha256": MODULE.sha256(report),
+        }
+        self.write_manifest()
+        result = MODULE.validate(self.manifest_path, self.root)
+        self.assertFalse(result["valid"])
+        self.assertIn("raw ROM fields", " ".join(result["errors"]))
+
     def test_rejects_overlapping_blocks(self):
         self.manifest["blocks"].append({
             "path": "overlap",

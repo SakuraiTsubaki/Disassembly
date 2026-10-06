@@ -51,6 +51,24 @@ def resolve_output(root: Path, relative: Any) -> Path:
     return candidate
 
 
+RAW_ROM_FIELDS = {"block_bytes", "bytes", "raw_bytes", "rom_bytes"}
+
+
+def find_raw_rom_fields(value: Any, location: str = "$") -> list[str]:
+    """Return JSON paths containing fields that publish verbatim ROM bytes."""
+    findings: list[str] = []
+    if isinstance(value, dict):
+        for key, child in value.items():
+            child_location = f"{location}.{key}"
+            if key in RAW_ROM_FIELDS:
+                findings.append(child_location)
+            findings.extend(find_raw_rom_fields(child, child_location))
+    elif isinstance(value, list):
+        for index, child in enumerate(value):
+            findings.extend(find_raw_rom_fields(child, f"{location}[{index}]"))
+    return findings
+
+
 def validate(manifest_path: Path, root: Path, rom_path: Path | None = None) -> dict[str, Any]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     errors: list[str] = []
@@ -113,8 +131,16 @@ def validate(manifest_path: Path, root: Path, rom_path: Path | None = None) -> d
                     raise ValueError(f"output is missing: {relative}")
                 if sha256(output_path) != expected:
                     raise ValueError(f"output hash mismatch: {relative}")
+                if output_path.suffix.lower() == ".json":
+                    report = json.loads(output_path.read_text(encoding="utf-8"))
+                    raw_fields = find_raw_rom_fields(report)
+                    if raw_fields:
+                        raise ValueError(
+                            f"publication output contains raw ROM fields: {relative}: "
+                            + ", ".join(raw_fields)
+                        )
                 checked_outputs += 1
-            except (TypeError, ValueError) as error:
+            except (json.JSONDecodeError, TypeError, ValueError) as error:
                 errors.append(str(error))
 
     rom_verified = False
