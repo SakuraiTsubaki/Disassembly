@@ -31,6 +31,19 @@ def _title(data: bytes) -> str:
     return raw.decode("ascii", errors="replace").rstrip()
 
 
+def _manufacturer_code(data: bytes) -> str | None:
+    if data[0x143] not in (0x80, 0xC0):
+        return None
+    title_and_code = data[0x134:0x143]
+    separator = title_and_code.find(b"\0")
+    if separator < 0 or separator + 5 != len(title_and_code):
+        return None
+    raw = title_and_code[separator + 1 :]
+    if not all(0x20 <= value <= 0x7E for value in raw):
+        return None
+    return raw.decode("ascii")
+
+
 def inspect_bytes(data: bytes, *, filename: str | None = None) -> dict[str, Any]:
     """Return reproducible identity and header validation for one ROM image."""
     if len(data) < 0x150:
@@ -50,6 +63,7 @@ def inspect_bytes(data: bytes, *, filename: str | None = None) -> dict[str, Any]
         **_hashes(data),
         "header": {
             "title": _title(data),
+            "manufacturer_code": _manufacturer_code(data),
             "cgb_flag": data[0x143],
             "new_licensee_code": data[0x144:0x146].decode("ascii", errors="replace"),
             "sgb_flag": data[0x146],
@@ -101,8 +115,6 @@ def main() -> int:
         checks["expected_sha256"] = expected
         checks["sha256_matches"] = result["sha256"] == expected
 
-    # ASCII escaping keeps JSON portable on Windows consoles with legacy code
-    # pages while preserving the exact Unicode string after JSON decoding.
     print(json.dumps(result, ensure_ascii=True, indent=None if args.compact else 2))
 
     required = [
@@ -117,4 +129,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
