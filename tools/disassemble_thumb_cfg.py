@@ -48,6 +48,25 @@ def trace(data: bytes, start_offset: int, max_span: int = 0x4000) -> dict:
                 item["kind"] = "return"
                 returns.append(address)
                 break
+            # agbcc can return by popping the saved link value into a low
+            # register and immediately branching through that same register.
+            if halfword & 0xFF00 == 0xBC00 and halfword & 0xFF and offset + 4 <= len(data):
+                registers = halfword & 0xFF
+                next_raw = data[offset + 2:offset + 4]
+                next_halfword = struct.unpack("<H", next_raw)[0]
+                branch_register = (next_halfword >> 3) & 0xF
+                if next_halfword & 0xFF87 == 0x4700 and branch_register < 8 and registers == 1 << branch_register:
+                    item["kind"] = "return-pop"
+                    visited.add(offset + 2)
+                    instructions[offset + 2] = {
+                        "address": address + 2,
+                        "source_offset": offset + 2,
+                        "halfword": next_halfword,
+                        "bytes_le": next_raw.hex(),
+                        "kind": "return-branch",
+                    }
+                    returns.append(address + 2)
+                    break
             if halfword & 0xF800 == 0xF000:
                 if offset + 4 > len(data):
                     raise ValueError("truncated Thumb BL")

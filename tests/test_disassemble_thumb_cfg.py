@@ -38,6 +38,15 @@ class DisassembleThumbCfgTests(unittest.TestCase):
         self.assertFalse(result["return_observed"])
         self.assertEqual(result["instruction_halfwords"], 1)
 
+    def test_pop_then_bx_same_register_is_a_return(self):
+        result = module.trace(self.pack(0xBC01, 0x4700), 0, 4)
+        self.assertEqual(result["returns"], [0x08000002])
+        self.assertEqual([item["kind"] for item in result["instructions"]], ["return-pop", "return-branch"])
+
+    def test_pop_then_bx_different_register_is_not_a_return(self):
+        result = module.trace(self.pack(0xBC02, 0x4700, 0x4770), 0, 6)
+        self.assertEqual(result["returns"], [0x08000004])
+
 
 if __name__ == "__main__":
     unittest.main()
