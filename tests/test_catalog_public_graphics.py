@@ -25,6 +25,15 @@ class PublicGraphicsCatalogTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             MODULE.png_metadata(b"not png")
 
+    def test_jasc_palette_metadata(self):
+        palette = b"JASC-PAL\n0100\n2\n0 0 0\n\n255 128 1\n"
+        self.assertEqual(MODULE.jasc_palette_metadata(palette),
+                         {"version": "0100", "color_count": 2})
+
+    def test_invalid_jasc_palette_rejected(self):
+        with self.assertRaises(ValueError):
+            MODULE.jasc_palette_metadata(b"JASC-PAL\n0100\n2\n0 0 0\n")
+
     def test_language_detection(self):
         self.assertEqual(MODULE.asset_language(Path("font-jp.png")), "Japanese")
         self.assertEqual(MODULE.asset_language(Path("font-ko.png")), "Korean")

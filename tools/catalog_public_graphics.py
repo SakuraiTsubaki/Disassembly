@@ -61,6 +61,27 @@ def png_metadata(data: bytes) -> dict[str, int | str]:
     }
 
 
+def jasc_palette_metadata(data: bytes) -> dict[str, int | str]:
+    try:
+        lines = data.decode("ascii").splitlines()
+    except UnicodeDecodeError as error:
+        raise ValueError("JASC palette is not ASCII") from error
+    if len(lines) < 3 or lines[0] != "JASC-PAL" or lines[1] != "0100":
+        raise ValueError("invalid JASC palette header")
+    try:
+        color_count = int(lines[2])
+        color_lines = [line for line in lines[3:] if line.strip()]
+        colors = [tuple(int(channel) for channel in line.split()) for line in color_lines]
+    except ValueError as error:
+        raise ValueError("invalid JASC palette value") from error
+    if color_count < 1 or len(colors) != color_count:
+        raise ValueError("JASC palette color count differs")
+    if any(len(color) != 3 or any(channel < 0 or channel > 255 for channel in color)
+           for color in colors):
+        raise ValueError("JASC palette contains an invalid RGB color")
+    return {"version": "0100", "color_count": color_count}
+
+
 def asset_language(path: Path) -> str:
     stem = path.stem.lower()
     for code, language in LANGUAGES.items():
@@ -146,6 +167,16 @@ def markdown(game: str, assets: list[dict[str, object]]) -> str:
             lines.extend(("Metadata sidecars:", ""))
             lines.extend(f"- [`{item['path']}`]({item['path']}) — `{str(item['sha256'])[:16]}...`" for item in sidecars)
             lines.append("")
+        palettes = [item for item in group if item["format"] == "JASC-PAL"]
+        if palettes:
+            lines.extend(("| Palette | Language | Colors | SHA-256 |", "| --- | --- | --- | --- |"))
+            for item in palettes:
+                path = str(item["path"])
+                lines.append(
+                    f"| [`{path}`]({path}) | {item['language']} | "
+                    f"{item['palette']['color_count']} | `{str(item['sha256'])[:16]}...` |"
+                )
+            lines.append("")
     lines.extend(
         (
             "Every entry is tied to at least one existing analysis or manifest record. Full hashes and provenance links are in `analysis/public-graphics-catalog.json`.",
@@ -157,7 +188,7 @@ def markdown(game: str, assets: list[dict[str, object]]) -> str:
 
 def build(root: Path, game: str) -> dict[str, object]:
     graphics = root / "graphics"
-    paths = sorted(path for path in graphics.rglob("*") if path.is_file() and path.suffix.lower() in (".png", ".json"))
+    paths = sorted(path for path in graphics.rglob("*") if path.is_file() and path.suffix.lower() in (".png", ".json", ".pal"))
     if not paths:
         raise ValueError("repository has no public graphics artifacts")
     documents = evidence_documents(root)
@@ -174,7 +205,7 @@ def build(root: Path, game: str) -> dict[str, object]:
             "path": relative_text,
             "sha256": digest(data),
             "size": len(data),
-            "format": "PNG" if path.suffix.lower() == ".png" else "JSON",
+            "format": {".png": "PNG", ".json": "JSON", ".pal": "JASC-PAL"}[path.suffix.lower()],
             "category": category,
             "language": asset_language(relative),
             "origin_reference": asset_language(relative) == "Japanese",
@@ -182,6 +213,8 @@ def build(root: Path, game: str) -> dict[str, object]:
         }
         if path.suffix.lower() == ".png":
             item["png"] = png_metadata(data)
+        elif path.suffix.lower() == ".pal":
+            item["palette"] = jasc_palette_metadata(data)
         else:
             json.loads(data.decode("utf-8"))
         assets.append(item)
@@ -199,6 +232,7 @@ def build(root: Path, game: str) -> dict[str, object]:
         "asset_count": len(assets),
         "png_count": sum(item["format"] == "PNG" for item in assets),
         "metadata_count": sum(item["format"] == "JSON" for item in assets),
+        "palette_count": sum(item["format"] == "JASC-PAL" for item in assets),
         "official_language_priority": ["Japanese", "Korean", "English", "German", "French", "Italian", "Spanish"],
         "assets": assets,
         "raw_rom_bytes_included": False,
@@ -211,7 +245,8 @@ def build(root: Path, game: str) -> dict[str, object]:
     (root / research_path).write_text(
         f"# {game} public graphics catalog\n\n"
         f"The catalog inventories all {len(assets)} files currently stored below `graphics/`: "
-        f"{catalog['png_count']} rendered PNG assets and {catalog['metadata_count']} JSON sidecars. "
+        f"{catalog['png_count']} rendered PNG assets, {catalog['palette_count']} JASC palettes, "
+        f"and {catalog['metadata_count']} JSON sidecars. "
         "Each entry records its full hash and points to the pre-existing ROM-derived analysis or "
         "manifest that establishes provenance. `ASSETS.md` supplies a browsable GitHub preview.\n\n"
         "The catalog does not infer a language when the filename does not declare one, and it "
